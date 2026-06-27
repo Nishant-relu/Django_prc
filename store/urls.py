@@ -1,10 +1,10 @@
 from django.urls import path
+
 from . import views
 
-# URLConf
 urlpatterns = [
-    path('products/', views.ProductList.as_view()),
-    path('products/<int:pk>/', views.ProductViewSet.as_view()),
-    path('collections/', views.CollectionList.as_view()),
-    path('collections/<int:pk>/', views.CollectionDetail.as_view(), name='collection-detail'),
+    path('products/', views.ProductViewSet.as_view({'get': 'list', 'post': 'create'}), name='product-list'),
+    path('products/<int:pk>/', views.ProductViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='product-detail'),
+    path('collections/', views.CollectionViewSet.as_view({'get': 'list', 'post': 'create'}), name='collection-list'),
+    path('collections/<int:pk>/', views.CollectionViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='collection-detail'),
 ]
