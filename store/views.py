@@ -43,22 +43,10 @@ class CollectionList(ListCreateAPIView):
     queryset = Collection.objects.annotate(product_count=Count('product')).all()
     serializer_class = CollectionSerializer
 
-class CollectionDetail(APIView):
+class CollectionDetail(RetrieveUpdateDestroyAPIView):
 
-    def get_object(self, pk):
-        return get_object_or_404(Collection.objects.annotate(products_count=Count('product')),pk=pk)
-
-    def get(self, request, pk):
-        collection = self.get_object(pk=pk)
-        serializer = CollectionSerializer(collection)
-        return Response(serializer.data)
-    
-    def put(self, request, pk):
-        collection = self.get_object(pk=pk)
-        serializer = CollectionSerializer(collection, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+    queryset = Collection.objects.annotate(products_count=Count('product'))
+    serializer_class = CollectionSerializer
 
     def delete(self, request, pk):
         collection = self.get_object(pk=pk)
@@ -66,40 +54,3 @@ class CollectionDetail(APIView):
             return Response({'error': ' Collection cannot be deleted'}, status=status.HTTP_403_FORBIDDEN)
         collection.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-# @api_view(['GET', 'PUT', 'DELETE'])
-# def collection_detail(request, pk):
-#     collection = get_object_or_404(Collection.objects.annotate(
-#         products_count=Count('product')
-#     ), pk=pk)
-
-#     if request.method == "GET":
-#         serialize = CollectionSerializer(collection)
-#         return Response(serialize.data)
-    
-#     elif request.method == "PUT":
-#         deserialize = CollectionSerializer(collection, request.data)
-#         deserialize.is_valid(raise_exception=True)
-#         deserialize.save()
-#         return Response(deserialize.data)
-    
-#     elif request.method == "DELETE":
-#         if collection.product.count() > 0:
-#             return Response({'error': ' Collection cannot be deleted'}, status=status.HTTP_403_FORBIDDEN)
-        
-#         collection.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
-
-# @api_view(['GET', 'POST'])
-# def collection_list(request):
-#     if request.method == "GET":
-#         queryset = Collection.objects.annotate(products_count=Count('product')).all()
-#         serializer = CollectionSerializer(queryset, many=True)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-    
-#     elif request.method == "POST":
-#         serializer = CollectionSerializer(data=request.data)  # deserialize the data
-#         serializer.is_valid(raise_exception=True)    # validate the data
-#         serializer.save() # then save the data 
-#         return Response(serializer.data, status=status.HTTP_201_CREATED)
