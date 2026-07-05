@@ -1,6 +1,7 @@
 from decimal import Decimal
+from pyexpat import model
 from rest_framework import serializers
-from .models import Cart, Product, Collection, Review
+from .models import Cart, Product, Collection, Review, CartItem
 
 class CollectionSerializer(serializers.ModelSerializer):
     class Meta:   
@@ -28,8 +29,21 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ['id', 'date', 'name', 'description', 'product']
         read_only_fields = ['product']
 
+class CartItemProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'title', 'unit_price']
+class CartItemSerializer(serializers.ModelSerializer):
+    product = CartItemProductSerializer(read_only=True)
+
+    class Meta:
+        model = CartItem
+        fields = ['id', 'product', 'quantity']
+
+
 class CartSerializer(serializers.ModelSerializer):
-    id = serializers.UUIDField(read_only=True)
+    items = CartItemSerializer(many=True, read_only=True)
+
     class Meta:
         model = Cart
-        fields = ['id']
+        fields = ['id', 'items']
