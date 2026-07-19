@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -150,9 +151,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-SIMPLE_JWT = {
-   'AUTH_HEADER_TYPES': ('JWT',),
-}
 
 AUTH_USER_MODEL = 'core.User'
 
@@ -161,3 +159,13 @@ DJOSER = {
         'user_create': 'core.serializers.UserCreateSerializer'
     }
 }
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('JWT',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=20)
+}
+
+# {
+#     "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NDU1MzY4NSwiaWF0IjoxNzg0NDY3Mjg1LCJqdGkiOiIwNGMzODU0MDBmM2I0ZGI1OTNhNGIyYmNkM2NhNDg0NyIsInVzZXJfaWQiOiI0In0.nF0B6JlGaN9_37aE_I10j0X7eOlMOAd87xepaifX9Cs",
+#     "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg2MTk1Mjg1LCJpYXQiOjE3ODQ0NjcyODUsImp0aSI6IjI3OWU1NWM4MTg3YjQ3YWNhMjQ2NWEwNWRlYTg0MmRkIiwidXNlcl9pZCI6IjQifQ.x3uW9MBe2YmmW4skf4eVGH19ulFZ8cWGdabmQ96mWLc"
+# }
